@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-slate-900 antialiased;
+  }
+
+  * {
+    @apply box-border;
+  }
+}
+
+@layer components {
+  .section-heading {
+    @apply font-serif text-3xl md:text-4xl font-semibold text-slate-900 mb-4;
+  }
+
+  .section-subheading {
+    @apply text-slate-500 text-base md:text-lg max-w-xl;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white
+           font-medium px-6 py-3 rounded-full transition-all duration-200
+           shadow-md hover:shadow-lg active:scale-95;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 border border-slate-300 hover:border-teal-600
+           text-slate-700 hover:text-teal-700 font-medium px-6 py-3 rounded-full
+           transition-all duration-200 active:scale-95;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-slate-100
+           hover:shadow-md transition-shadow duration-200;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Google Drive image wrapper */
+.drive-image-frame {
+  position: relative;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+/* Default: natural height (works in modals, lightboxes, anywhere) */
+.drive-image-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.4s ease;
+}
+
+/* Cover mode: fills container exactly (parent must have explicit height/aspect-ratio) */
+.drive-image-frame.cover {
+  position: relative;
+}
+.drive-image-frame.cover img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.drive-image-frame:hover img {
+  transform: scale(1.04);
+}

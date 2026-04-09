@@ -1,0 +1,61 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]       # runs on every push to main
+  workflow_dispatch:       # lets you trigger it manually from the Actions tab
+
+# Grant the workflow the permissions GitHub Pages needs
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deployment at a time; cancel any in-progress run
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      # 1. Check out the repository
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Set up Node 20 with npm caching
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # 3. Install dependencies (clean install — respects package-lock.json)
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Build the production bundle
+      #    VITE_BASE_URL is a repository variable you set in:
+      #    Settings → Secrets and variables → Actions → Variables → New variable
+      #    Leave it empty (or unset) for a username.github.io page.
+      #    Set it to '/your-repo-name/' for a project page.
+      - name: Build
+        run: npm run build
+        env:
+          VITE_BASE_URL: ${{ vars.VITE_BASE_URL }}
+
+      # 5. Upload the built 'dist/' folder as a Pages artifact
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      # 6. Deploy the artifact to GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
